@@ -54,3 +54,18 @@ monster_data = {
 	'raccoon': {'health': 300,'exp':250,'damage':40,'attack_type': 'claw',  'attack_sound':'./audio/attack/claw.wav','speed': 2, 'resistance': 0.5, 'attack_radius': 120, 'notice_radius': 400},
 	'spirit': {'health': 100,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'./audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
 	'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'./audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
+
+level_0 = {'node_pos':(100,400), 'content': 'this is level 0', 'unlock':1}
+level_1 = {'node_pos':(280,220), 'content': 'this is level 1', 'unlock':2}
+level_2 = {'node_pos':(460,550), 'content': 'this is level 2', 'unlock':3}
+level_3 = {'node_pos':(600,350), 'content': 'this is level 3', 'unlock':4}
+level_4 = {'node_pos':(850,210), 'content': 'this is level 4', 'unlock':5}
+level_5 = {'node_pos':(1000,400), 'content': 'this is level 5', 'unlock':5}
+
+levels = {
+	0: level_0,
+	1: level_1,
+	2: level_2,
+	3: level_3,
+	4: level_4,
+	5: level_5}

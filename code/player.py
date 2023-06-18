@@ -58,6 +58,7 @@ class Player(Entity):
 
         #damage_timer
         self.vulnerable = True
+        self.alive = True
         self.hurt_time = None
         self.invulnerablity_duration = 500
 
@@ -74,7 +75,7 @@ class Player(Entity):
         for animation in self.animations.keys():
             full_path = character_path + animation
             self.animations[animation] = import_folder(full_path) 
-                
+
     def get_status(self):
         if self.direction.x == 0 and self.direction.y == 0:
             if not 'idle' in self.status and not 'attack' in self.status:
@@ -185,6 +186,11 @@ class Player(Entity):
     
     def get_cost_by_index(self,index):
         return list(self.upgrade_cost.values())[index]
+
+    #def check_player_death(self):
+    #    if self.health <= 0:
+    #        self.game_active = False
+         
 
     def energy_recovery(self):
         if self.energy < self.stats['energy']:

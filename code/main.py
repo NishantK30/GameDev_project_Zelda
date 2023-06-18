@@ -1,41 +1,46 @@
-import pygame
-import sys
+import pygame, sys
 from settings import *
-from level import Level
-
-
+from overworld import Overworld
+from stage import Stage
+from level import *
 
 class Game:
-    def __init__(self):
+	def __init__(self):
+		self.max_level = 2
+		self.overworld = Overworld(1,self.max_level,screen,self.create_level)
+		self.status = 'overworld'
 
-        # general settings
-        pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH,HEIGTH))
-        pygame.display.set_caption('Zelda Proptotype')
-        self.clock = pygame.time.Clock()
+	def create_level(self,current_level):
+		self.level = Level(current_level,self.create_overworld)
+		self.stage = Stage(current_level,screen,self.create_overworld)
+		self.status = 'level'
 
-        self.level = Level()
+	def create_overworld(self,current_level,new_max_level):
+		if new_max_level > self.max_level:
+			self.max_level = new_max_level
+		self.overworld = Overworld(current_level,self.max_level,screen,self.create_level)
+		self.status = 'overworld'
 
-        # sound 
-        main_sound = pygame.mixer.Sound('./audio/main.ogg')
-        main_sound.set_volume(0.5)
-        main_sound.play(loops = -1)
+	def run(self):
+		if self.status == 'overworld':
+			self.overworld.run()
+		else:
+			self.level.run()
+			self.stage.run()
 
-    def run(self):
-        while True:  
-            for event in pygame.event.get():
-                if event.type == pygame. QUIT:
-                    pygame.quit()
-                    sys.exit()
-                
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_m:
-                        self.level.toggle_menu()
-            self.screen.fill(WATER_COLOR)
-            self.level.run()
-            pygame.display.update()
-            self.clock.tick(FPS)
+pygame.init()
+screen = pygame.display.set_mode((WIDTH,HEIGTH))
+clock = pygame.time.Clock()
+game = Game()
 
-if __name__ == '__main__':
-    game = Game()
-    game.run()
+while True:
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			pygame.quit()
+			sys.exit()
+			
+	screen.fill((94,129,162))
+	game.run()
+
+	pygame.display.update()
+	clock.tick(60)
