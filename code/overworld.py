@@ -8,13 +8,15 @@ class Node(pygame.sprite.Sprite):
 		super().__init__()
 		self.frames = import_folder(path)
 		self.frame_index = 0
-		self.image = self.frames[self.frame_index]
+		self.image = self.frames[self.frame_index].convert_alpha()
 		if status == 'available':
 			self.status = 'available'
 		else:
 			self.status = 'locked'
+		
 		self.rect = self.image.get_rect(center = pos)
 		self.detection_zone = pygame.Rect(self.rect.centerx-(icon_speed/2),self.rect.centery-(icon_speed/2),icon_speed,icon_speed)
+		
     
 	def animate(self):
 		self.frame_index += 0.15
@@ -35,7 +37,7 @@ class Icon(pygame.sprite.Sprite):
 	def __init__(self,pos):
 		super().__init__()
 		self.pos = pos
-		self.image = pygame.image.load('./graphics/overworld/hat.png')
+		self.image = pygame.image.load('./graphics/overworld/hat.png').convert_alpha()
 		self.rect = self.image.get_rect(center = pos)
 
 	def update(self):
@@ -58,6 +60,8 @@ class Overworld:
 		# sprites 
 		self.setup_nodes()
 		self.setup_icon()
+		
+		#self.overworld_bg_music = pygame.mixer.Sound('./audio/main.ogg')
 
 	def setup_nodes(self):
 		self.nodes = pygame.sprite.Group()
@@ -82,7 +86,7 @@ class Overworld:
 		keys = pygame.key.get_pressed()
 
 		if not self.moving:
-			if keys[pygame.K_RIGHT]:
+			if keys[pygame.K_RIGHT] and self.current_level <=4:
 				self.move_direction = self.get_movement_data('next')
 				self.current_level += 1
 				self.moving = True
@@ -97,7 +101,7 @@ class Overworld:
 	def get_movement_data(self,target):
 		start = pygame.math.Vector2(self.nodes.sprites()[self.current_level].rect.center)
 		
-		if target == 'next': 
+		if target == 'next' and self.current_level <=4: 
 			end = pygame.math.Vector2(self.nodes.sprites()[self.current_level + 1].rect.center)
 		else:
 			end = pygame.math.Vector2(self.nodes.sprites()[self.current_level - 1].rect.center)
@@ -112,6 +116,7 @@ class Overworld:
 				self.moving = False
 				self.move_direction = pygame.math.Vector2(0,0)
 
+
 	def run(self):
 		self.input()
 		self.update_icon_pos()
@@ -121,3 +126,4 @@ class Overworld:
 		#self.draw_paths()
 		self.nodes.draw(self.display_surface)
 		self.icon.draw(self.display_surface)
+		
