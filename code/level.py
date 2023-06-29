@@ -13,6 +13,7 @@ from magic import MagicPlayer
 from upgrade import Upgrade
 from game_data import *
 from overworld import *
+from stage import *
 
 
 class Level:
@@ -25,7 +26,7 @@ class Level:
         self.display_surface = pygame.display.get_surface()
         self.game_paused = False
         #sprite group setup
-        self.visible_sprites = YsortCameraGroup()
+        self.visible_sprites = YsortCameraGroup(current_level)
         self.obstacle_sprites = pygame.sprite.Group()
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
@@ -154,28 +155,40 @@ class Level:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_n] :
             self.create_overworld(self.current_attack,self.new_max_level)
-	
+
+    def game_paused(self):
+            event = pygame.event.get()
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_m:
+                    self.toggle_menu()
     
+    def current_level(self):
+        return self.current_level
+
     def run(self):
         self.visible_sprites.custom_draw(self.player)
         self.ui.display(self.player)
         self.check_player_death()
         self.check_win()
-        
-       
+
         if self.game_paused:
             self.upgrade.display()
+            
         else:
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
-            #self.check_player_death(self.player)
+		
+        
+        
+        
+        
         
 
 
 #creating a custome sprite Group
 class YsortCameraGroup(pygame.sprite.Group):
-    def __init__(self):
+    def __init__(self,current_level):
 
         #general setup
         super().__init__()
@@ -183,12 +196,13 @@ class YsortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] //2
-        self.floor_surface = pygame.image.load('./graphics/tilemap/ground.png')
+        self.current_level = current_level
+        self.floor_surface = pygame.image.load(maps[self.current_level])
         self.floor_rect = self.floor_surface.get_rect(topleft = (0,0))
         
     def custom_draw(self,player):
 
-        #creating offset
+        #creating offse1
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
 
